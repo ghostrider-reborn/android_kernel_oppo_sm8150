@@ -48,6 +48,9 @@
 			qcom,kpdpwr-sw-debounce;
 			qcom,system-reset;
 			qcom,store-hard-reset-reason;
+			//#ifdef OPLUS_FEATURE_QCOM_PMICWD
+			qcom,pmicwd;
+			//#endif  /* OPLUS_FEATURE_QCOM_PMICWD */
 
 			qcom,pon_1 {
 				qcom,pon-type = <PON_POWER_ON_TYPE_KPDPWR>;
@@ -58,8 +61,18 @@
 			qcom,pon_2 {
 				qcom,pon-type = <PON_POWER_ON_TYPE_RESIN>;
 				qcom,pull-up;
-				linux,code = <KEY_VOLUMEDOWN>;
+				linux,code = <KEY_VOLUMEUP>;
 			};
+			/*#ifdef VENDOR_EDIT*/
+			qcom,pon_3 {
+				qcom,pon-type = <PON_POWER_ON_TYPE_KPDPWR_RESIN>;
+				qcom,support-reset = <1>;
+				qcom,s1-timer = <6720>; //you can change the time
+				qcom,s2-timer = <2000>;//you can change the time
+				qcom,s2-type = <PON_POWER_OFF_TYPE_SHUTDOWN>;
+				qcom,pull-up;
+			};
+			/*#endif*/
 		};
 
 		pm8150_clkdiv: clock-controller@5b00 {
@@ -96,14 +109,21 @@
 					<0x0 0xc2 0 IRQ_TYPE_NONE>,
 					<0x0 0xc3 0 IRQ_TYPE_NONE>,
 					<0x0 0xc5 0 IRQ_TYPE_NONE>,
+					/*ifdef VENDOR_EDIT*/
+					<0x0 0xc6 0 IRQ_TYPE_NONE>,
+					//#endif
 					<0x0 0xc8 0 IRQ_TYPE_NONE>,
 					<0x0 0xc9 0 IRQ_TYPE_NONE>;
 			interrupt-names = "pm8150_gpio1", "pm8150_gpio3",
 					"pm8150_gpio4", "pm8150_gpio6",
-					"pm8150_gpio9", "pm8150_gpio10";
+					/*ifdef VENDOR_EDIT*/
+					"pm8150_gpio7", "pm8150_gpio9", "pm8150_gpio10";
+					//#endif
 			gpio-controller;
 			#gpio-cells = <2>;
-			qcom,gpios-disallowed = <2 5 7 8>;
+			/*ifdef VENDOR_EDIT*/
+			qcom,gpios-disallowed = <2 5 8>;
+			//#endif
 		};
 
 		pm8150_sdam_2: sdam@b100 {
